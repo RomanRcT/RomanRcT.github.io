@@ -9,4 +9,26 @@
 
 This *is* _test_ page
 
+== Проверка математических формул
+
+
+[latexmath]
+++++
+k_{n+1} = n^2 + k_n^2 - k_{n-1}
+++++
+
+
+
+
+Inline equation works too! latexmath:[a^2+b^2=c^2]. 
+
+[latexmath]
+++++
+\begin{align}
+\dot{x} & = \sigma(y-x) \\
+\dot{y} & = \rho x - y - xz \\
+\dot{z} & = -\beta z + xyp
+\end{align}
+++++
+
 
