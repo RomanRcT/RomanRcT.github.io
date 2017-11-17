@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "casper"
+    "name": "roon"
   },
   "urls": {
     "site": "https://RomanRcT.github.io",
     "hubpress": "https://romanrct.github.io",
-    "theme": "//RomanRcT.github.io/themes/ghostium",
+    "theme": "//RomanRcT.github.io/themes/casper",
     "images": "https://RomanRcT.github.io/images"
   },
   "initialisationConfigComponent": {
