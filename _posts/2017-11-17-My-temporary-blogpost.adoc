@@ -1,0 +1,26 @@
+= My temporary blogpost
+
+
+:published_at: 2017-11-17
+// :hp-tags: HubPress, Blog, Open_Source,
+// :hp-alt-title: My English Title
+
+. First line
+. Second line
+. Third line
+
+* unordered item
+* unordered item 2
+* unordered item 3
+
+NOTE: This is note
+
+WARNING: This is warning
+
+.Test java code
+[source,java]
+----
+public static void main(String[] args) {
+	SYstem.out.println("Hello world!");
+}
+----
