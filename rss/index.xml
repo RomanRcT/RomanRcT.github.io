@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Untitled RSS Feed]]></title><description><![CDATA[Untitled RSS Feed]]></description><link>https://RomanRcT.github.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 17 Nov 2017 18:19:45 GMT</lastBuildDate><atom:link href="https://RomanRcT.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[My temporary blogpost]]></title><description><![CDATA[<div class="olist arabic">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Untitled RSS Feed]]></title><description><![CDATA[Untitled RSS Feed]]></description><link>https://RomanRcT.github.io</link><generator>RSS for Node</generator><lastBuildDate>Fri, 17 Nov 2017 18:20:31 GMT</lastBuildDate><atom:link href="https://RomanRcT.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[My temporary blogpost]]></title><description><![CDATA[<div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>First line</p>
+<p>First <strong>line</strong></p>
 </li>
 <li>
-<p>Second line</p>
+<p>Second <em>line</em></p>
 </li>
 <li>
-<p>Third line</p>
+<p>Third <code>line</code></p>
 <div class="ulist">
 <ul>
 <li>
