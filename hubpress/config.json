@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "uno-zen"
+    "name": "roon"
   },
   "urls": {
     "site": "https://RomanRcT.github.io",
     "hubpress": "https://romanrct.github.io",
-    "theme": "//RomanRcT.github.io/themes/saga",
+    "theme": "//RomanRcT.github.io/themes/uno-zen",
     "images": "https://RomanRcT.github.io/images"
   },
   "initialisationConfigComponent": {
@@ -35,7 +35,7 @@
     "disqus": ""
   },
   "socialnetwork": {
-    "email": "roman.g.k@gmail.com",
+    "email": "",
     "github": "",
     "twitter": "",
     "facebook": "",
