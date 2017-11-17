@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "roon"
+    "name": "ghostium"
   },
   "urls": {
     "site": "https://RomanRcT.github.io",
     "hubpress": "https://romanrct.github.io",
-    "theme": "//RomanRcT.github.io/themes/uno-zen",
+    "theme": "//RomanRcT.github.io/themes/roon",
     "images": "https://RomanRcT.github.io/images"
   },
   "initialisationConfigComponent": {
