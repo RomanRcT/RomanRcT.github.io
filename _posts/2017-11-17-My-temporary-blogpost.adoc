@@ -5,9 +5,9 @@
 // :hp-tags: HubPress, Blog, Open_Source,
 // :hp-alt-title: My English Title
 
-. First line
-. Second line
-. Third line
+. First *line*
+. Second _line_
+. Third `line`
 
 * unordered item
 * unordered item 2
