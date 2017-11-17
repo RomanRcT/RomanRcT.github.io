@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "uno"
+    "name": "saga"
   },
   "urls": {
     "site": "https://RomanRcT.github.io",
     "hubpress": "https://romanrct.github.io",
-    "theme": "//RomanRcT.github.io/themes/casper",
+    "theme": "//RomanRcT.github.io/themes/uno",
     "images": "https://RomanRcT.github.io/images"
   },
   "initialisationConfigComponent": {
