@@ -6,12 +6,12 @@
     "cname": ""
   },
   "theme": {
-    "name": "saga"
+    "name": "uno-zen"
   },
   "urls": {
     "site": "https://RomanRcT.github.io",
     "hubpress": "https://romanrct.github.io",
-    "theme": "//RomanRcT.github.io/themes/uno",
+    "theme": "//RomanRcT.github.io/themes/saga",
     "images": "https://RomanRcT.github.io/images"
   },
   "initialisationConfigComponent": {
