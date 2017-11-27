@@ -1,0 +1,281 @@
+= Archive Log Mode
+:doctype: article
+:published_at: 2017-11-27
+:encoding: utf-8
+:lang: ru
+:toc2:  
+:homepage: http://www.aviacons.ru
+:experimental:
+include::../tr.asciidoc[]
+
+Процесс преобразования журнальных файлов в архивные журнальные файлы называется архивированием. Это возможно только когда база данных находится в режиме `ARCHIVELOG`. Вот некоторые преимущества режима `ARCHIVELOG`:
+
+*   Восстановление базы данных
+*   Обновлять на горячую
+*   Выполнение резервирования без выключения
+
+.В этой статье...   
+[NOTE]
+====
+* Основываясь на версии Oracle 10g и Oracle 11g.  
+* выключение базы дянных потребуется для включения/выключения режима Archive Log.  
+* привелегии SYSTEM необходимы для выполнения команд. Иначе вы можете получить некоторые ошибки.
+====
+
+== Статус Archive log
+
+Прежде чем начать, вы должны проверить статус режима Archivelog вашего экземпляра. Есть несколько способов проверить это:
+
+[source,sql]
+----
+-- Show archive log status
+
+ARCHIVE LOG LIST ;
+/*
+Database log mode            No Archive mode
+Automatic archival           Disabled
+Archive destination          USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence   2186
+Current log sequence         2188
+*/
+
+SELECT LOG_MODE FROM SYS.V$DATABASE ;
+/*
+LOG_MODE
+------------
+NOARCHIVELOG
+*/
+----
+
+Как вы видите здесь, экземпляр базы данных не в режиме Archive Log.
+
+== Включение archive log
+
+.Осторожно ...  
+[CAUTION]
+====
+Рекомендовано выполнить *резервирование* вашего экземпляра базы данных *перед* внесения этих изменений.
+====
+
+Вы можете использовать параметры по умолчанию, чтобы режим заработал. Однако, елси вы можете захотеть персонализировать параметры режима, вы можете увидеть как это сделать.
+
+Теперь мы можем включить режим archive log для нашего экземпляра следующим образом:
+
+[source,sql]
+----
+-- Enable archive log
+
+SHUTDOWN IMMEDIATE ;
+
+STARTUP MOUNT ;
+
+ALTER DATABASE ARCHIVELOG ;
+
+ALTER DATABASE OPEN ;
+
+----
+
+Давайте снова проверим информацию о режиме archive log:
+
+[source,sql]
+----
+ALTER SYSTEM ARCHIVE LOG LIST ;
+/*
+Database log mode            Archive mode
+Automatic archival           Enabled
+Archive destination          /u01/app/oracle/oradata/orcl/arch
+Oldest online log sequence   2186
+Current log sequence         2188
+*/
+
+SELECT LOG_MODE FROM SYS.V$DATABASE ;
+/*
+LOG_MODE
+------------
+ARCHIVELOG
+*/
+----
+
+Круто,теперь мы в режиме archive log!
+
+.Знаете лы вы?  
+[TIP]
+====
+Перед версией Oracle 10g, следующие команды должны были выполнены для включения автоматического архивирования:
+[source,sql]
+----
+ALTER SYSTEM ARCHIVE LOG START ;  
+ALTER SYSTEM SET LOG_ARCHIVE_START=TRUE SCOPE=SPFILE ;
+----
+Теперь это *устаревшие* для Oracle 10g и старше.
+====
+
+== Выключение archive log
+
+Если, вдруг по каким-то причинам вам нужно выключить режим Archive Log:
+
+[source,sql]
+----
+-- Disable archive log
+
+SHUTDOWN IMMEDIATE ;
+
+STARTUP MOUNT ;
+
+ALTER DATABASE NOARCHIVELOG ;
+
+ALTER DATABASE OPEN ;
+
+----
+
+Теперь экземпляр будет в режиме `NO ARCHIVE LOG`.
+
+== Дополнительно...
+
+=== Параметры режима Archive log
+
+.Осторожно...  
+[CAUTION]
+====
+Некторые параметры могут потребовать рестарта экземпляра `db`.
+====
+
+=== Изменение расположения архивных журналов
+
+По умолчанию расположение архивов отображены в `USE_DB_RECOVERY_FILE_DEST`, это означает, что архивные журналы записываются в директорию flash recovery area путь к кторой определяется в параметре `RECOVERY_FILE_DEST`. Но если перемнная `LOG_ARCHIVE_DEST_n` установлена, то она будет оперделять расположение архивных журналов.
+
+[source,sql]
+----
+-- Показать статус archive log (перед выполнением)
+
+ALTER SYSTEM ARCHIVE LOG LIST ;
+/*
+Database log mode            No Archive mode
+Automatic archival           Disabled
+Archive destination          USE_DB_RECOVERY_FILE_DEST
+Oldest online log sequence   2186
+Current log sequence         2188
+*/
+
+-- получение параметров flash recovery 
+
+SHOW PARAMETER recovery_file_dest ;
+/*
+NAME                            TYPE        VALUE
+------------------------------- ----------- -----------------------------------
+db_recovery_file_dest           string      /u01/app/oracle/flash_recovery_area
+db_recovery_file_dest_size      big integer 4096M
+*/
+
+-- установка параметра log_archive_dest_1 
+
+ALTER SYSTEM SET log_archive_dest_1='LOCATION=/u01/app/oracle/oradata/orcl/arch' SCOPE=BOTH ;
+/*
+System altered.
+*/
+
+-- Показать статус archive log (после выполнения)
+
+ALTER SYSTEM ARCHIVE LOG LIST ;
+/*
+Database log mode            No Archive mode
+Automatic archival           Disabled
+Archive destination          /u01/app/oracle/oradata/orcl/arch
+Oldest online log sequence   2186
+Current log sequence         2188
+*/
+----
+
+Для получения дополнительной информации, пожалуйста обратитесь к документации oracle  https://docs.oracle.com/cd/E18283_01/server.112/e17120/archredo004.htm[здесь].
+
+=== Другие используемые параметры archive log 
+
+Далее указаны некоторые параметры, кторые могут вас заинтересовать.
+
+Переменная `https://docs.oracle.com/cd/E18283_01/server.112/e17110/initparams124.htm[LOG_ARCHIVE_FORMAT]` задает формат имени файла по умолчанию.
+
+*   Следующие переменные могут быть использованы в формате:
+
+    **   `%s` номер последовательности журнала (log sequence number)
+    **   `%S` log sequence number, zero filled
+    **   `%t` номер нити (thread number)
+    **   `%T` thread number, zero filled
+    **   `%a` идентификатор актвации (activation ID)
+    **   `%d` идентификатор базы данных (database ID)
+    **  `%r` resetlogs ID that ensures unique names are constructed for the archived log files across multiple incarnations of the database
+*   Пример:
++
+[source,sql]
+----
+ALTER SYSTEM SET LOG_ARCHIVE_FORMAT='log%t_%s_%r.arc'SCOPE=BOTH ;
+----
+
+Параметр `https://docs.oracle.com/cd/E18283_01/server.112/e17110/initparams126.htm[LOG_ARCHIVE_MAX_PROCESSES]` задает максимальное число процессов ARCn, которые могут быть созданы.
+
+=== Включение режима archive log с ручным архивированием
+
+Это *не рекомендовано*, так что вы можете использовать это, если вы действительно знаете, что делаете.
+
+[source,sql]
+----
+-- Включение archive log с ручным архивированием
+
+SHUTDOWN IMMEDIATE ;
+
+STARTUP MOUNT ;
+
+ALTER DATABASE ARCHIVELOG MANUAL;
+
+ALTER DATABASE OPEN ;
+
+-- The following can be used in automatic archiving as well
+-- Manually switch online rego log and archive all unarchived log files
+
+ALTER SYSTEM SWITCH LOGFILE ;
+ALTER SYSTEM ARCHIVE LOG ALL ;
+----
+
+.Осторожно ...  
+[CAUTION]
+====
+If all your online redo logs are filled up, then this mode will hang your database until you manually archive one of them at least.
+====
+
+For more information, please check oracle documentation https://docs.oracle.com/cd/E18283_01/server.112/e17120/archredo004.htm[here].
+
+=== Несколько полезных запросов
+
+[source,sql]
+----
+-- Дневной размер сгенерированных archives log
+
+SELECT TRUNC(next_time) "Date", ROUND(SUM(blocks*block_size/1024/1024)) Mo
+FROM v$archived_log
+GROUP BY TRUNC(next_time)
+ORDER BY 1 DESC ;
+/*
+Date             MO
+-------- ----------
+23/02/12        102
+22/02/12        132
+21/02/12        127
+20/02/12        129
+*/
+----
+
+=== Archive log views
+
+Several dynamic performance views contain useful information about archived redo logs, as summarized in the following table.
+
+|====
+| Dynamic Performance View | Description
+| `V$DATABASE` | Shows if the database is in `ARCHIVELOG` or `NOARCHIVELOG` mode and if `MANUAL` (archiving mode) has been specified.
+| `V$ARCHIVED_LOG` | Displays historical archived log information from the control file. If you use a recovery catalog, the `RC_ARCHIVED_LOG` view contains similar information.
+| `V$ARCHIVE_DEST` | Describes the current instance, all archive destinations, and the current value, mode, and status of these destinations.
+| `V$ARCHIVE_PROCESSES` | Displays information about the state of the various archive processes for an instance.
+| `V$BACKUP_REDOLOG` | Contains information about any backups of archived logs. If you use a recovery catalog, the `RC_BACKUP_REDOLOG` contains similar information.
+| `V$LOG` | Displays all redo log groups for the database and indicates which need to be archived.
+| `V$LOG_HISTORY` | Contains log history information such as which logs have been archived and the SCN range for each archived log.
+|====
+
+
